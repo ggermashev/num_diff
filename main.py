@@ -29,13 +29,22 @@ def get_errors(arr_default, arr_calculated):
     return errors
 
 
-
-
 left = -0.8
 right = 0.8
 #step = 0.01
 
-for step in np.arange(0.01,0.21,0.01):
+d_dif1_mid = []
+d_dif1_right = []
+d_dif2_precision2 = []
+d_dif2_precision4 = []
+
+startstep = 0.02
+endstep = 0.21
+deltastep = 0.02
+
+plt.close('all')
+
+for step in np.arange(startstep,endstep,deltastep):
 
     arr_x = np.arange(left,right,step)
     arr_x_dif1_mid = arr_x[1:-1]
@@ -56,6 +65,11 @@ for step in np.arange(0.01,0.21,0.01):
     error_dif1_right = get_errors(dif_func[:-1], my_dif_func_right)
     error_dif2_precision2 = get_errors(dif2_func[1:-1], my_dif2_func_precision2)
     error_dif2_precision4 = get_errors(dif2_func[2:-2], my_dif2_func_precision4)
+
+    d_dif1_mid.append(np.log(max(error_dif1_mid))*10)
+    d_dif1_right.append(np.log(max(error_dif1_right))*10)
+    d_dif2_precision2.append(np.log(max(error_dif2_precision2))*10)
+    d_dif2_precision4.append(np.log(max(error_dif2_precision4))*10)
 
     plt.subplot(2,2,1)
     plt.title('dif1')
@@ -85,4 +99,43 @@ for step in np.arange(0.01,0.21,0.01):
 
     plt.figtext(0.05, 0.95, f"step: {round(step, 2)}", color='g')
     plt.show()
+
+line_x = [-40,-20]
+line_y = [-40,-20]
+line_2y= [-80,-40]
+
+plt.subplot(2,2,1)
+plt.title('dif1_mid', color='r')
+plt.xlabel('10*log(h)')
+plt.ylabel('10*log(error)')
+plt.plot(10*np.log(np.arange(startstep,endstep,deltastep)), d_dif1_mid, label='logerror')
+plt.plot(line_x, line_y, color='g')
+plt.plot(line_x, line_2y, color='g')
+
+plt.subplot(2,2,2)
+plt.title('dif1_right', color='r')
+plt.xlabel('10*log(h)')
+plt.ylabel('10*log(error)')
+plt.plot(10*np.log(np.arange(startstep,endstep,deltastep)), d_dif1_right, label='logerror')
+plt.plot(line_x, line_y, color='g')
+plt.plot(line_x, line_2y, color='g')
+
+plt.subplot(2,2,3)
+plt.title('dif2_precision2', color='r')
+plt.xlabel('10*log(h)')
+plt.ylabel('10*log(error)')
+plt.plot(10*np.log(np.arange(startstep,endstep,deltastep)), d_dif2_precision2, label='logerror')
+plt.plot(line_x, line_y, color='g')
+plt.plot(line_x, line_2y, color='g')
+
+plt.subplot(2,2,4)
+plt.title('dif2_precision4', color='r')
+plt.xlabel('10*log(h)')
+plt.ylabel('10*log(error)')
+plt.plot(10*np.log(np.arange(startstep,endstep,deltastep)), d_dif2_precision4, label='logerror')
+plt.plot(line_x, line_y, color='g')
+plt.plot(line_x, line_2y, color='g')
+
+plt.legend()
+plt.show()
 
